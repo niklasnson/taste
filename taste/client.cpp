@@ -1,6 +1,5 @@
 #include "client.h"
 
-Client::Client() {}
 Client::Client(Server &server) : server(server) {}
 
 void

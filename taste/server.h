@@ -3,14 +3,16 @@
 
 #include "package.h"
 #include <iostream> 
-
+#include <vector>
 class Server {
  public:
   Server();
   void recive(Package &package); 
   void send(Package &package);
   bool connected();
- private:
+  std::vector<Package> get_log(); 
+ private: 
+  std::vector<Package> log; 
 };
 
 #endif

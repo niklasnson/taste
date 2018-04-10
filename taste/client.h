@@ -18,7 +18,7 @@ class Client {
   void send_unorded_packages(int num);
   bool connected(); 
  private:
-  Server server; 
+  Server &server; 
 };
 
 #endif

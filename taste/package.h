@@ -5,6 +5,8 @@ class Package {
  public:
   Package(int num);
   void identify(); 
+  bool operator==(Package const & rhs) const; 
+  
  private:
   int num;
 };
