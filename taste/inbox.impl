@@ -1,0 +1,16 @@
+#include "inbox.h"
+
+template <typename T>
+Inbox<T>::Inbox() {}
+
+template <typename T>
+void
+Inbox<T>::enroll(T & client) {
+  routing_table.emplace(client.get_name(), &client);   
+}
+
+template <typename T>
+void
+Inbox<T>::recv(Message & msg) {
+  routing_table.at(msg.to) -> recv(msg); 
+}

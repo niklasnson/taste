@@ -1,7 +1,7 @@
 #include <iostream> 
-#include "server.h"
 #include "client.h"
-#include "package.h"
+#include "inbox.h"
+#include "message.h"
 
 void usage(char* name) {
   std::cout << std::endl << name << " [options]" << std::endl << 
@@ -9,15 +9,13 @@ void usage(char* name) {
 }
 
 int main(int argc, char *argv[]) {
-  /*
-  if (argc == 1) {
-    usage(argv[0]);
-    return 0; 
-  }
-  */
-  
-  Server server; 
-  Client client(server); 
-  client.send_unorded_packages(25);
+
+  Inbox<Client> inbox; 
+  Client alice("Alice", inbox); 
+  Client bob("Bob", inbox); 
+  Message message("PING", "Alice", "Bob");
+  inbox.enroll(alice);
+  inbox.enroll(bob);
+  alice.send(message);
   return 0; 
 }

@@ -1,43 +1,28 @@
 #include "client.h"
+#include "inbox.h"
+#include <iostream>
 
-Client::Client(Server &server) : server(server) {}
+Client::Client(std::string name, Inbox<Client> & inbox)
+  :name{name} ,inbox(inbox)
+  {}
+
 
 void
-Client::recive(Package &package) {
-  package.identify();
+Client::send(Message & msg) {
+  inbox.recv(msg);
 }
 
-void 
-Client::send(Package &package) {
-  server.recive(package);
-}
+void
+Client::recv(Message & msg) {
+  std::cout << name << " rcv msg: " << msg.message << std::endl; 
 
-void 
-Client::send_packages(int num) {
-  for (int i=0; i < num; i++) {
-    Package package(i);
-    send(package);
+  if (msg.message == "PING") {
+    send(*(new Message{"PONG", name, msg.from})); 
   }
 }
 
-void 
-Client::send_unorded_packages(int num) {
-  std::vector<Package> packages_list; 
-  for (int i=0; i < num; i++) {
-    packages_list.push_back(i);
-  }
-
-  std::random_device rd;
-  std::mt19937 g(rd());
-
-  std::shuffle(packages_list.begin(), packages_list.end(), g);
-
-  for (auto package : packages_list) {
-    send(package);
-  } 
+std::string
+Client::get_name() {
+  return name; 
 }
 
-bool 
-Client::connected() {
-  return server.connected(); 
-}
