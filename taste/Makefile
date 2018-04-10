@@ -6,5 +6,10 @@ NAME=taste.out
 taste:
 	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
 
+run: clean taste
+	@echo "Running ..."
+	@echo ""
+	./taste.out
+
 clean:
 	rm -f *.out
