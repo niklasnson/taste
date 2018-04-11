@@ -4,7 +4,7 @@ COPTS=-pthread
 LIBGTEST=-I$(HOME)/Code/googletest/googletest/include $(HOME)/Code/googletest/googletest/build/libgtest.a $(HOME)/Code/googletest/googletest/build/libgtest_main.a
 
 TASTE_DIR=taste
-SRC=$(TASTE_DIR)/client.cpp $(TASTE_DIR)/inbox.h $(TASTE_DIR)/message.cpp
+SRC=$(TASTE_DIR)/client.cpp $(TASTE_DIR)/message.cpp
 
 TEST_DIR=tests
 TEST_MAIN=$(TEST_DIR)/test_main.cpp
