@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+#include <iostream>
+#include <thread>
 
 #include "../taste/client.h"
 #include "../taste/message.h"
@@ -29,8 +31,15 @@ TEST_F(PackageTest, Creation) {
   ASSERT_TRUE(inbox != nullptr);
   ASSERT_TRUE(alice != nullptr);
 }
+void send_message(Client* alice, Client* bob) {
+  alice->send(*(new Message{"PING", alice->get_name(), bob->get_name()}));
+}
 
 TEST_F(PackageTest, SendSome) {
-  alice->send(*(new Message{"PING", alice->get_name(), bob->get_name()}));
-  ASSERT_MSG(*(new Message{"PONG", bob->get_name(), alice->get_name()}));
+  std::thread msg_thread(send_message, alice, bob);
+  Message msg{"PONG", bob->get_name(), alice->get_name()};
+  ASSERT_MSG(msg);
+  msg_thread.join();
 }
+
+TEST(Whatever, WaitingForTheSun) { ASSERT_EQ(true, true); }
