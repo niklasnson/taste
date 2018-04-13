@@ -46,9 +46,9 @@ TEST_F(PackageTest, SendOneMessage) {
 
 TEST_F(PackageTest, AssertUnordered) {
   Message tjena{"Tjena.", alice->get_name(), bob->get_name()};
-  std::thread msg_thread1(send_message, std::ref(tjena), alice);
   Message tja{"Tja.", bob->get_name(), alice->get_name()};
   Message leget{"Läget?", alice->get_name(), bob->get_name()};
+  std::thread msg_thread1(send_message, std::ref(tjena), alice);
   std::thread msg_thread2(send_message, std::ref(tja), alice);
   std::thread msg_thread3(send_message, std::ref(leget), alice);
   std::vector<Message> messages{tja, leget, tjena};
