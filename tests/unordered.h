@@ -75,6 +75,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
 #define ASSERT_UNORDERED(expects_list)                                 \
   do {                                                                 \
     std::vector<Message>* au_log = inbox->get_log();                   \
+    std::mutex* au_log_lock = inbox->get_lock();                       \
     while (au_log->empty()) {                                          \
       continue;                                                        \
     }                                                                  \
@@ -82,6 +83,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
     while (!au_done) {                                                 \
       for (auto it{expects_list.begin()}; it != expects_list.end();) { \
         bool removed{false};                                           \
+        au_log_lock->lock();                                           \
         for (auto& msg : *au_log) {                                    \
           if (msg == *it) {                                            \
             ASSERT_EQ(*it, msg);                                       \
@@ -90,6 +92,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
             break;                                                     \
           }                                                            \
         }                                                              \
+        au_log_lock->unlock();                                         \
         if (!removed) {                                                \
           ++it;                                                        \
         }                                                              \
