@@ -23,16 +23,26 @@ class Timer {
   }
 };
 
-#define ASSERT_MSG(expected)                         \
-  do {                                               \
-    std::vector<Message>* am_log = inbox->get_log(); \
-    while (am_log->empty()) {                        \
-      continue;                                      \
-    }                                                \
-    while (am_log->back().to != expected.to) {       \
-      continue;                                      \
-    }                                                \
-    ASSERT_EQ(expected, am_log->back());             \
+Message& next_message(std::string recipient, std::vector<Message>* log) {
+  while (log->empty()) {
+    continue;
+  }
+  while (log->back().to != recipient) {
+    continue;
+  }
+  return log->back();
+}
+
+#define ASSERT_MSG(expected)                                \
+  do {                                                      \
+    std::vector<Message>* am_log = inbox->get_log();        \
+    ASSERT_EQ(expected, next_message(expected.to, am_log)); \
+  } while (false)
+
+#define EXPECT_MSG(expected)                                \
+  do {                                                      \
+    std::vector<Message>* am_log = inbox->get_log();        \
+    EXPECT_EQ(expected, next_message(expected.to, am_log)); \
   } while (false)
 
 #define ASSERT_MSG_TIMER(expected, timeout)                                \
@@ -50,6 +60,42 @@ class Timer {
       }                                                                    \
     }                                                                      \
     ASSERT_EQ(expected, am_log->back());                                   \
+  } while (false)
+
+  // sendmessage(asdf)
+  // ASSERT_UNORDERED(fdsa)
+  // sendmessage(blehbleh)
+  // ASSERT_UNORDERED(blehbleh)
+
+  // sendmessage(blehbleh)
+  // sendmessage(blehbleh)
+  // sendmessage(blehbleh)
+  // ASSERT_UNORDERED({bleh, bleh, bleh})
+
+#define ASSERT_UNORDERED(expects_list)                                 \
+  do {                                                                 \
+    std::vector<Message>* au_log = inbox->get_log();                   \
+    while (au_log->empty()) {                                          \
+      continue;                                                        \
+    }                                                                  \
+    bool au_done{false};                                               \
+    while (!au_done) {                                                 \
+      for (auto it{expects_list.begin()}; it != expects_list.end();) { \
+        bool removed{false};                                           \
+        for (auto& msg : *au_log) {                                    \
+          if (msg == *it) {                                            \
+            ASSERT_EQ(*it, msg);                                       \
+            it = expects_list.erase(it);                               \
+            removed = true;                                            \
+            break;                                                     \
+          }                                                            \
+        }                                                              \
+        if (!removed) {                                                \
+          ++it;                                                        \
+        }                                                              \
+      }                                                                \
+      if (expects_list.empty()) au_done = !au_done;                    \
+    }                                                                  \
   } while (false)
 
 #endif /* UNORDERED_H */
