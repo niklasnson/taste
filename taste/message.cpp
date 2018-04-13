@@ -6,3 +6,7 @@ Message::Message(std::string message, std::string from, std::string to)
 bool Message::operator==(Message const& rhs) const {
   return message == rhs.message && from == rhs.from && to == rhs.to;
 }
+
+std::string Message::to_string() const {
+  return "<" + message + " " + from + " " + to + ">";
+}

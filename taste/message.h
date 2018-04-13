@@ -10,6 +10,7 @@ class Message {
   std::string from;
   std::string to;
   bool operator==(Message const& rhs) const;
+  std::string to_string() const;
 };
 
 #endif
