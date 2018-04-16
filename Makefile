@@ -9,12 +9,13 @@ SRC=$(TASTE_DIR)/client.cpp $(TASTE_DIR)/message.cpp
 TEST_DIR=tests
 TEST_MAIN=$(TEST_DIR)/test_main.cpp
 
-all: test_deterministic
+all: test_solutions
 
-test_deterministic:
-	$(CC) $(CFLAGS) $(COPTS) -o test_deterministic.out $(TEST_MAIN) $(TEST_DIR)/test_deterministic.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR)
+test_solutions:
+	$(CC) $(CFLAGS) $(COPTS) -o test_solutions.out $(TEST_MAIN) $(TEST_DIR)/test_solutions.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR)
 
-run_deterministic:
-	./test_deterministic.out
+run_solutions:
+	./test_solutions.out
+
 clean:
 	rm -f *.out
