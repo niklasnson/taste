@@ -10,7 +10,7 @@ Client::Client(std::string name, Inbox<Client>& inbox)
 void Client::send(Message& msg) { inbox.recv(msg); }
 
 void Client::recv(Message& msg) {
-  std::cout << name << " rcv msg: " << msg.message << std::endl;
+  // std::cout << name << " rcv msg: " << msg.message << std::endl;
 
   if (msg.message == "PING") {
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
