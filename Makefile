@@ -12,7 +12,7 @@ TEST_MAIN=$(TEST_DIR)/test_main.cpp
 all: test_solutions
 
 test_solutions:
-	$(CC) $(CFLAGS) $(COPTS) -o test_solutions.out $(TEST_MAIN) $(TEST_DIR)/test_solutions.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR)
+	$(CC) $(CFLAGS) $(COPTS) -g -o test_solutions.out $(TEST_MAIN) $(TEST_DIR)/test_solutions.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR)
 
 run_solutions:
 	./test_solutions.out
