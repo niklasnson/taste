@@ -10,9 +10,9 @@ Client::Client(std::string name, Inbox<Client>& inbox)
     : name{name}, inbox(inbox) {}
 
 void Client::send(Message& msg) {
-  // std::random_device rd;
-  std::default_random_engine gen;
-  std::uniform_int_distribution<int> dist(0, 10000);
+  std::random_device rd;
+  std::default_random_engine gen(rd());
+  std::uniform_int_distribution<int> dist(0, 1000);
   std::this_thread::sleep_for(std::chrono::milliseconds(dist(gen)));
   inbox.recv(msg);
 }
