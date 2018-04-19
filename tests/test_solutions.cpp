@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <algorithm>
 #include <iostream>
 #include <random>
 #include <thread>
@@ -51,12 +52,18 @@ TEST_F(PackageTest, SleepExpectMsg) {
 
   // Use sleep to expect correct answer
   Message response{"PONG", bob->get_name(), alice->get_name()};
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   auto log = inbox->get_log();
   EXPECT_EQ(response, log->back());
 
   msg_thread.join();
 }
+
+struct Packet {
+  Packet(Message& message, Client* sender) : message{message}, sender{sender} {}
+  Message& message;
+  Client* sender;
+};
 
 struct MessagesUnorderedTest : testing::Test {
   InboxStub<Client>* inbox;
@@ -95,6 +102,13 @@ struct MessagesUnorderedTest : testing::Test {
     return std::thread(send_message, std::ref(msg), sender);
   }
 
+  std::vector<int>& get_order(int size) {
+    std::vector<int>* v = new std::vector<int>(size);
+    std::generate(v->begin(), v->end(), [n = 0]() mutable { return n++; });
+    std::shuffle(v->begin(), v->end(), std::mt19937{std::random_device{}()});
+    return *v;
+  }
+
   virtual ~MessagesUnorderedTest() {
     for (auto client : clients) delete client;
     delete inbox;
@@ -129,21 +143,21 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   std::vector<Message> messages{msg1, msg2, msg3, msg4};
   std::vector<std::thread> threads{};
 
-  std::vector<Message> send_messages{msg1, msg2, msg3, msg4};
+  std::vector<Packet> packets{Packet(msg1, alice), Packet(msg2, bob),
+                              Packet(msg3, alice), Packet(msg4, bob)};
   for (int i{0}; i < 100; i++) {
     Client* sender = get_random_client();
     Message annoying{"[" + std::to_string(i) + "]Are We There Yet?",
                      sender->get_name(), get_random_client()->get_name()};
-    send_messages.push_back(annoying);
-
-    std::thread tr(send_message, std::ref(annoying), sender);
-    threads.push_back(std::move(tr));
+    packets.push_back(Packet(annoying, sender));
   }
 
-  std::thread msg_thread1(send_message, std::ref(msg1), alice);
-  std::thread msg_thread2(send_message, std::ref(msg2), bob);
-  std::thread msg_thread3(send_message, std::ref(msg3), alice);
-  std::thread msg_thread4(send_message, std::ref(msg4), bob);
+  auto order = get_order(packets.size());
+  for (auto& i : order) {
+    std::thread tr(send_message, std::ref(packets.at(i).message),
+                   packets.at(i).sender);
+    threads.push_back(std::move(tr));
+  }
   /*
    * Expecting things unordered with sleep
    */
@@ -189,9 +203,5 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   }
   EXPECT_EQ("test4", test);
 
-  threads.push_back(std::move(msg_thread1));
-  threads.push_back(std::move(msg_thread2));
-  threads.push_back(std::move(msg_thread3));
-  threads.push_back(std::move(msg_thread4));
   for (auto it{threads.begin()}; it != threads.end(); ++it) it->join();
 }
