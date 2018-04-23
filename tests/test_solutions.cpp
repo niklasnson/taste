@@ -6,6 +6,7 @@
 
 #include "../taste/client.h"
 #include "../taste/message.h"
+#include "seed.h"
 #include "stubs/inbox_stub.h"
 #include "unordered.h"
 
@@ -20,8 +21,8 @@ struct PackageTest : testing::Test {
 
   PackageTest() {
     inbox = new InboxStub<Client>{};
-    alice = new Client("Alice", *dynamic_cast<Inbox<Client>*>(inbox));
-    bob = new Client("Bob", *dynamic_cast<Inbox<Client>*>(inbox));
+    alice = new Client("Alice", *dynamic_cast<Inbox<Client>*>(inbox), seed);
+    bob = new Client("Bob", *dynamic_cast<Inbox<Client>*>(inbox), seed);
 
     inbox->enroll(*alice);
     inbox->enroll(*bob);
@@ -73,25 +74,26 @@ struct MessagesUnorderedTest : testing::Test {
   Client* bob;
   std::vector<Client*> clients;
 
-  std::default_random_engine gen;
+  std::mt19937 gen;
   std::uniform_int_distribution<int> dist;
 
   MessagesUnorderedTest() {
     inbox = new InboxStub<Client>{};
-    alice = new Client("Alice", *dynamic_cast<Inbox<Client>*>(inbox));
-    bob = new Client("Bob", *dynamic_cast<Inbox<Client>*>(inbox));
+    alice = new Client("Alice", *dynamic_cast<Inbox<Client>*>(inbox), seed);
+    bob = new Client("Bob", *dynamic_cast<Inbox<Client>*>(inbox), seed);
 
     clients.push_back(alice);
     clients.push_back(bob);
     clients.push_back(
-        new Client("Chuck", *dynamic_cast<Inbox<Client>*>(inbox)));
+        new Client("Chuck", *dynamic_cast<Inbox<Client>*>(inbox), seed));
     clients.push_back(
-        new Client("Mallory", *dynamic_cast<Inbox<Client>*>(inbox)));
+        new Client("Mallory", *dynamic_cast<Inbox<Client>*>(inbox), seed));
     clients.push_back(
-        new Client("Oscar", *dynamic_cast<Inbox<Client>*>(inbox)));
+        new Client("Oscar", *dynamic_cast<Inbox<Client>*>(inbox), seed));
 
     for (auto client : clients) inbox->enroll(*client);
 
+    gen.seed(1337);
     dist = *(new std::uniform_int_distribution<int>(0, clients.size() - 1));
   }
 
@@ -107,7 +109,7 @@ struct MessagesUnorderedTest : testing::Test {
   std::vector<int>& get_order(int size) {
     std::vector<int>* v = new std::vector<int>(size);
     std::generate(v->begin(), v->end(), [n = 0]() mutable { return n++; });
-    std::shuffle(v->begin(), v->end(), std::mt19937{std::random_device{}()});
+    std::shuffle(v->begin(), v->end(), gen);
     return *v;
   }
 
@@ -123,28 +125,11 @@ TEST_F(MessagesUnorderedTest, ExpectUnordered) {
   Message msg2{"Merry Christmas.", bob->get_name(), alice->get_name()};
   Message msg3{"QUERTYIOP", alice->get_name(), bob->get_name()};
   Message msg4{"ASDFGHJK", bob->get_name(), alice->get_name()};
+
+  // The messages we're supposed to find.
   std::vector<Message> messages{msg1, msg2, msg3, msg4};
 
-  std::thread msg_thread1(send_message, std::ref(msg1), alice);
-  std::thread msg_thread2(send_message, std::ref(msg2), bob);
-  std::thread msg_thread3(send_message, std::ref(msg3), alice);
-  std::thread msg_thread4(send_message, std::ref(msg4), bob);
-  EXPECT_UNORDERED(messages);
-  msg_thread1.join();
-  msg_thread2.join();
-  msg_thread3.join();
-  msg_thread4.join();
-}
-
-TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
-  Message msg1{"Mr. Watson--come here--I want to see you.", alice->get_name(),
-               bob->get_name()};
-  Message msg2{"Merry Christmas.", bob->get_name(), alice->get_name()};
-  Message msg3{"QUERTYIOP", alice->get_name(), bob->get_name()};
-  Message msg4{"ASDFGHJK", bob->get_name(), alice->get_name()};
-  std::vector<Message> messages{msg1, msg2, msg3, msg4};
-  std::vector<std::thread> threads{};
-
+  // Build all packets which should be sent.
   std::vector<Packet> packets{Packet(msg1, alice), Packet(msg2, bob),
                               Packet(msg3, alice), Packet(msg4, bob)};
   for (int i{0}; i < 100; i++) {
@@ -154,56 +139,91 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
     packets.push_back(Packet(annoying, sender));
   }
 
+  // Send messages in a random order.
+  std::vector<std::thread> threads{};
   auto order = get_order(packets.size());
   for (auto& i : order) {
     std::thread tr(send_message, std::ref(packets.at(i).message),
                    packets.at(i).sender);
     threads.push_back(std::move(tr));
   }
-  /*
-   * Expecting things unordered with sleep
-   */
+
+  EXPECT_UNORDERED(messages);
+  for (auto it{threads.begin()}; it != threads.end(); ++it) it->join();
+}
+
+TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
+  Message msg1{"Mr. Watson--come here--I want to see you.", alice->get_name(),
+               bob->get_name()};
+  Message msg2{"Merry Christmas.", bob->get_name(), alice->get_name()};
+  Message msg3{"QUERTYIOP", alice->get_name(), bob->get_name()};
+  Message msg4{"ASDFGHJK", bob->get_name(), alice->get_name()};
+
+  // The messages we're supposed to find.
+  std::vector<Message> messages{msg1, msg2, msg3, msg4};
+
+  // Build all packets which should be sent.
+  std::vector<Packet> packets{Packet(msg1, alice), Packet(msg2, bob),
+                              Packet(msg3, alice), Packet(msg4, bob)};
+  for (int i{0}; i < 100; i++) {
+    Client* sender = get_random_client();
+    Message annoying{"[" + std::to_string(i) + "]Are We There Yet?",
+                     sender->get_name(), get_random_client()->get_name()};
+    packets.push_back(Packet(annoying, sender));
+  }
+
+  // Send messages in a random order.
+  std::vector<std::thread> threads{};
+  auto order = get_order(packets.size());
+  for (auto& i : order) {
+    std::thread tr(send_message, std::ref(packets.at(i).message),
+                   packets.at(i).sender);
+    threads.push_back(std::move(tr));
+  }
+
+  // Expecting messages unordered with sleep.
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   auto log = inbox->get_log();
 
-  std::string test{"failed test1"};
+  // Go through the log
+  Message test_message{"Didn't find the correct message", ":(", ":("};
+  Message found_message = test_message;
   for (auto& msg : *log) {
     if (msg == msg1) {
-      EXPECT_EQ(msg, msg1);
-      test = "test1";
+      found_message = msg1;
+      break;
     }
   }
-  EXPECT_EQ("test1", test);
+  EXPECT_EQ(msg1, found_message);
 
-  test = "failed test2";
+  found_message = test_message;
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   for (auto& msg : *log) {
     if (msg == msg2) {
-      EXPECT_EQ(msg, msg2);
-      test = "test2";
+      found_message = msg2;
     }
   }
-  EXPECT_EQ("test2", test);
+  EXPECT_EQ(msg2, found_message);
 
-  test = "failed test3";
+  found_message = test_message;
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   for (auto& msg : *log) {
     if (msg == msg3) {
-      EXPECT_EQ(msg, msg3);
-      test = "test3";
+      found_message = msg3;
+      break;
     }
   }
-  EXPECT_EQ("test3", test);
+  EXPECT_EQ(msg3, found_message);
 
-  test = "failed test4";
+  found_message = test_message;
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   for (auto& msg : *log) {
     if (msg == msg4) {
-      EXPECT_EQ(msg, msg4);
-      test = "test4";
+      found_message = msg4;
+      break;
     }
   }
-  EXPECT_EQ("test4", test);
+  EXPECT_EQ(msg4, found_message);
 
   for (auto it{threads.begin()}; it != threads.end(); ++it) it->join();
 }
