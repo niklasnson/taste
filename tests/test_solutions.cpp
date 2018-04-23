@@ -9,6 +9,10 @@
 #include "stubs/inbox_stub.h"
 #include "unordered.h"
 
+/*!
+ * Helper function for sending one message
+ */
+void send_message(Message& msg, Client* sender) { sender->send(msg); }
 struct PackageTest : testing::Test {
   InboxStub<Client>* inbox;
   Client* alice;
@@ -21,18 +25,16 @@ struct PackageTest : testing::Test {
 
     inbox->enroll(*alice);
     inbox->enroll(*bob);
+    Message mgs{"There's always messages in the banana stand.",
+                alice->get_name(), bob->get_name()};
   }
+
   virtual ~PackageTest() {
     delete alice;
     delete bob;
     delete inbox;
   }
 };
-
-/*!
- * Helper function for sending one message
- */
-void send_message(Message& msg, Client* sender) { sender->send(msg); }
 
 TEST_F(PackageTest, SendOneMessage) {
   // Send one message
@@ -164,7 +166,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   auto log = inbox->get_log();
 
-  std::string test{""};
+  std::string test{"failed test1"};
   for (auto& msg : *log) {
     if (msg == msg1) {
       EXPECT_EQ(msg, msg1);
@@ -173,7 +175,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   }
   EXPECT_EQ("test1", test);
 
-  test = "";
+  test = "failed test2";
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   for (auto& msg : *log) {
     if (msg == msg2) {
@@ -183,7 +185,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   }
   EXPECT_EQ("test2", test);
 
-  test = "";
+  test = "failed test3";
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   for (auto& msg : *log) {
     if (msg == msg3) {
@@ -193,7 +195,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   }
   EXPECT_EQ("test3", test);
 
-  test = "";
+  test = "failed test4";
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   for (auto& msg : *log) {
     if (msg == msg4) {
