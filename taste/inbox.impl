@@ -1,4 +1,6 @@
 #include "inbox.h"
+#include <iostream>
+#include <stdexcept>
 
 template <typename T>
 Inbox<T>::Inbox() {}
@@ -12,5 +14,9 @@ Inbox<T>::enroll(T & client) {
 template <typename T>
 void
 Inbox<T>::recv(Message & msg) {
+  try {
   routing_table.at(msg.to) -> recv(msg); 
+  } catch (const std::out_of_range & oor) {
+    std::cerr << oor.what() << ": Out of range. Key: '" << msg.to << "'." << std::endl; 
+  }
 }
