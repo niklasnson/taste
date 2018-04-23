@@ -6,7 +6,7 @@
 
 #include "../taste/client.h"
 #include "../taste/message.h"
-#include "seed.h"
+#include "arguments.h"
 #include "stubs/inbox_stub.h"
 #include "unordered.h"
 
@@ -55,7 +55,7 @@ TEST_F(PackageTest, SleepExpectMsg) {
 
   // Use sleep to expect correct answer
   Message response{"PONG", bob->get_name(), alice->get_name()};
-  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleep_one));
   auto log = inbox->get_log();
   EXPECT_EQ(response, log->back());
 
@@ -93,7 +93,7 @@ struct MessagesUnorderedTest : testing::Test {
 
     for (auto client : clients) inbox->enroll(*client);
 
-    gen.seed(1337);
+    gen.seed(seed);
     dist = *(new std::uniform_int_distribution<int>(0, clients.size() - 1));
   }
 
@@ -132,7 +132,7 @@ TEST_F(MessagesUnorderedTest, ExpectUnordered) {
   // Build all packets which should be sent.
   std::vector<Packet> packets{Packet(msg1, alice), Packet(msg2, bob),
                               Packet(msg3, alice), Packet(msg4, bob)};
-  for (int i{0}; i < 100; i++) {
+  for (int i{0}; i < n_messages; i++) {
     Client* sender = get_random_client();
     Message annoying{"[" + std::to_string(i) + "]Are We There Yet?",
                      sender->get_name(), get_random_client()->get_name()};
@@ -165,7 +165,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   // Build all packets which should be sent.
   std::vector<Packet> packets{Packet(msg1, alice), Packet(msg2, bob),
                               Packet(msg3, alice), Packet(msg4, bob)};
-  for (int i{0}; i < 100; i++) {
+  for (int i{0}; i < n_messages; i++) {
     Client* sender = get_random_client();
     Message annoying{"[" + std::to_string(i) + "]Are We There Yet?",
                      sender->get_name(), get_random_client()->get_name()};
@@ -182,7 +182,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   }
 
   // Expecting messages unordered with sleep.
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleep_uno1));
   auto log = inbox->get_log();
 
   // Go through the log
@@ -197,7 +197,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   EXPECT_EQ(msg1, found_message);
 
   found_message = test_message;
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleep_uno2));
   for (auto& msg : *log) {
     if (msg == msg2) {
       found_message = msg2;
@@ -206,7 +206,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   EXPECT_EQ(msg2, found_message);
 
   found_message = test_message;
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleep_uno3));
   for (auto& msg : *log) {
     if (msg == msg3) {
       found_message = msg3;
@@ -216,7 +216,7 @@ TEST_F(MessagesUnorderedTest, SleepExpectUnordered) {
   EXPECT_EQ(msg3, found_message);
 
   found_message = test_message;
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  std::this_thread::sleep_for(std::chrono::milliseconds(sleep_uno4));
   for (auto& msg : *log) {
     if (msg == msg4) {
       found_message = msg4;
