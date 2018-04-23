@@ -1,14 +1,12 @@
 #include <gtest/gtest.h>
+#include <seed.h>
+#include <string>
 #include <thread>
 
-void exec_gtest(int argc, char* argv[], int& res) {
-  ::testing::InitGoogleTest(&argc, argv);
-  res = RUN_ALL_TESTS();
-}
+unsigned seed;
 
 int main(int argc, char* argv[]) {
-  int res{-1};
-  std::thread gt(exec_gtest, argc, argv, std::ref(res));
-  gt.join();
-  return res;
+  ::testing::InitGoogleTest(&argc, argv);
+  seed = std::stoull(argv[1], nullptr);
+  return RUN_ALL_TESTS();
 }
