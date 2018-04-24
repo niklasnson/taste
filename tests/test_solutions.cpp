@@ -26,8 +26,9 @@ struct PackageTest : testing::Test {
 
     inbox->enroll(*alice);
     inbox->enroll(*bob);
-    Message mgs{"There's always messages in the banana stand.",
+    Message msg{"There's always messages in the banana stand.",
                 alice->get_name(), bob->get_name()};
+    inbox->get_log()->push_back(msg);
   }
 
   virtual ~PackageTest() {
@@ -95,6 +96,10 @@ struct MessagesUnorderedTest : testing::Test {
 
     gen.seed(seed);
     dist = *(new std::uniform_int_distribution<int>(0, clients.size() - 1));
+
+    Message msg{"There's always messages in the banana stand.",
+                alice->get_name(), bob->get_name()};
+    inbox->get_log()->push_back(msg);
   }
 
   Client* get_random_client() { return clients.at(dist(gen)); }
