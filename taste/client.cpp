@@ -18,7 +18,7 @@ void Client::recv(Message& msg) {
   if (msg.message == "PING") {
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     send(*(new Message{"PONG", name, msg.from}));
-  }
+  } // TODO: Add more commands to increase messages passed... :D eg. if MSG == "send A B", send msg A to B.
 }
 
 std::string Client::get_name() { return name; }
