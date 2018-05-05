@@ -1,22 +1,110 @@
 #include <iostream>
-#include "client.h"
-#include "inbox.h"
+#include "taste.hpp"
 #include "message.h"
 
-void usage(char* name) {
-  std::cout << std::endl
-            << name << " [options]" << std::endl
-            << "Options:" << std::endl;
-}
-
 int main(int argc, char* argv[]) {
-  Inbox<Client> inbox;
-  unsigned seed{1337};
-  Client alice("Alice", inbox, seed);
-  Client bob("Bob", inbox, seed);
-  Message message("PING", "Alice", "Bob");
-  inbox.enroll(alice);
-  inbox.enroll(bob);
-  alice.send(message);
-  return 0;
+  std::vector<Message> messages{
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob"),
+    Message("message", "Alice", "Bob")
+      };
+  Taste taste{messages, 1336, 1000};
+  return taste.run();
 }

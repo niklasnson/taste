@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-std=c++11
-SRC=client.cpp message.cpp main.cpp
+SRC=taste.cpp message.cpp main.cpp
 NAME=taste.out
 
 taste:
