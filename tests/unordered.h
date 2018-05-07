@@ -4,13 +4,6 @@
 #include <chrono>
 
 /*!
- * Pretty print messages.
- */
-std::ostream& operator<<(std::ostream& os, Message const& m) {
-  return os << "<" << m.message << " " << m.from << " " << m.to << ">";
-}
-
-/*!
  * \brief A timer class where done() will return true if the timer has "gone
  * off".
  */
