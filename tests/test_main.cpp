@@ -13,6 +13,12 @@ unsigned sleep_uno3;
 unsigned sleep_uno4;
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
+  if (argc < 8) {
+    std::cerr << "usage: seed messages sleep_one sleep_uno1 sleep_uno2 "
+                 "sleep_uno3 sleep_uno4"
+              << std::endl;
+    return -1;
+  }
   seed = std::stoull(argv[1], nullptr);
   n_messages = std::stoull(argv[2], nullptr);
   sleep_one = std::stoull(argv[3], nullptr);

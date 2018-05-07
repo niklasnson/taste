@@ -1,9 +1,10 @@
-#include <iterator>
 #include "taste.hpp"
+#include <iostream>
+#include <iterator>
 
-Taste::Taste(std::vector<Message> const& messages, unsigned const& seed, int const& sleep_max)
-  :messages{messages}, inbox{}, gen(seed), dist_sleep(0, sleep_max)
-{}
+Taste::Taste(std::vector<Message> const& messages, unsigned const& seed,
+             int const& sleep_max)
+    : messages{messages}, inbox{}, gen(seed), dist_sleep(0, sleep_max) {}
 
 void Taste::sleep_random() {
   std::this_thread::sleep_for(std::chrono::milliseconds(dist_sleep(gen)));
@@ -15,15 +16,14 @@ void Taste::recv_random() {
   auto msg = messages.at(n);
   messages.erase(std::next(messages.begin(), n));
   inbox.push_back(msg);
+  std::cout << msg << std::endl;
 }
 
-std::vector<Message> Taste::get_log() {
-  return inbox;
-}
+std::vector<Message> Taste::get_log() { return inbox; }
 
 int Taste::run() {
   bool done{false};
-  while(!done) {
+  while (!done) {
     if (messages.empty())
       done = true;
     else {
