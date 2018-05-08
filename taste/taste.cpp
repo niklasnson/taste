@@ -19,7 +19,7 @@ void Taste::recv_random() {
   std::cout << msg << std::endl;
 }
 
-std::vector<Message> Taste::get_log() { return inbox; }
+std::vector<Message>* Taste::get_log() { return &inbox; }
 
 int Taste::run() {
   bool done{false};
