@@ -9,10 +9,13 @@ SRC=$(TASTE_DIR)/taste.cpp $(TASTE_DIR)/message.cpp
 TEST_DIR=tests
 TEST_MAIN=$(TEST_DIR)/test_main.cpp
 
-all: clsc test_expectmsg_sleep test_expectmsg test_unordered
+all: clsc test_expectmsg_sleep test_expectmsg test_unordered test_unordered_sleep
 
 clsc:
 	clear;clear;
+
+test_unordered_sleep:
+	$(CC) $(CFLAGS) $(COPTS) -g -o test_unordered_sleep.out $(TEST_MAIN) $(TEST_DIR)/test_unordered_sleep.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
 
 test_unordered:
 	$(CC) $(CFLAGS) $(COPTS) -g -o test_unordered.out $(TEST_MAIN) $(TEST_DIR)/test_unordered.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)

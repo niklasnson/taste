@@ -38,6 +38,7 @@ struct PackageTest : testing::Test {
   virtual ~PackageTest() {
     delete taste;
     delete fail;
+    delete messages;
   }
 };
 
