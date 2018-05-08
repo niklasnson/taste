@@ -26,7 +26,7 @@ class Timer {
 /*!
  * Returns the next incoming message for a specific receiver.
  */
-Message& next_message(std::string recipient, std::vector<Message>* log) {
+Message next_message(std::string recipient, std::vector<Message>* log) {
   while (log->empty()) {
     continue;
   }
@@ -41,7 +41,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
  */
 #define ASSERT_MSG(expected)                                \
   do {                                                      \
-    std::vector<Message>* am_log = inbox->get_log();        \
+    std::vector<Message>* am_log = taste->get_log();        \
     ASSERT_EQ(expected, next_message(expected.to, am_log)); \
   } while (false)
 
@@ -50,7 +50,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
  */
 #define EXPECT_MSG(expected)                                \
   do {                                                      \
-    std::vector<Message>* am_log = inbox->get_log();        \
+    std::vector<Message>* am_log = taste->get_log();        \
     EXPECT_EQ(expected, next_message(expected.to, am_log)); \
   } while (false)
 
