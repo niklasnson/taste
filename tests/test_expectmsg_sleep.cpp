@@ -11,13 +11,18 @@
 
 struct PackageTest : testing::Test {
   Taste* taste;
+  Message* fail;
   PackageTest() {
+    fail = new Message{"Fail", "Fail", "Fail"};
     std::vector<Message> messages{Message("PING", "Alice", "Bob"),
                                   Message("PONG", "Bob", "Alice")};
     taste = new Taste{messages, seed, 1000};
   }
 
-  virtual ~PackageTest() {}
+  virtual ~PackageTest() {
+    delete taste;
+    delete fail;
+  }
 };
 
 TEST_F(PackageTest, SleepExpectMsg) {
@@ -27,5 +32,6 @@ TEST_F(PackageTest, SleepExpectMsg) {
   Message response{"PONG", "Bob", "Alice"};
   std::this_thread::sleep_for(std::chrono::milliseconds(sleep_one));
   auto log = taste->get_log();
-  EXPECT_EQ(response, log.back());
+
+  EXPECT_EQ(response, (log->empty() ? *fail : log->back()));
 }
