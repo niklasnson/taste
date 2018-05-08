@@ -9,13 +9,16 @@ SRC=$(TASTE_DIR)/taste.cpp $(TASTE_DIR)/message.cpp
 TEST_DIR=tests
 TEST_MAIN=$(TEST_DIR)/test_main.cpp
 
-all: test_solutions
+all: clsc test_expectmsg_sleep test_expectmsg
 
-test_solutions:
+clsc:
+	clear;clear;
+
+test_expectmsg:
+	$(CC) $(CFLAGS) $(COPTS) -g -o test_expectmsg.out $(TEST_MAIN) $(TEST_DIR)/test_expectmsg.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
+
+test_expectmsg_sleep:
 	$(CC) $(CFLAGS) $(COPTS) -g -o test_expectmsg_sleep.out $(TEST_MAIN) $(TEST_DIR)/test_expectmsg_sleep.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
-
-run_solutions:
-	./test_expectmsg_sleep.out
 
 clean:
 	rm -f *.out
