@@ -47,7 +47,7 @@ TEST_F(PackageTest, SleepExpectUnordered) {
   t.detach();
 
   // Expecting messages unordered with sleep.
-  std::this_thread::sleep_for(std::chrono::milliseconds(sleep_uno1));
+  std::this_thread::sleep_for(std::chrono::milliseconds(test_sleep));
   auto log = taste->get_log();
 
   int found{0};

@@ -30,7 +30,7 @@ TEST_F(PackageTest, SleepExpectMsg) {
   t.detach();
   // Use sleep to expect correct message
   Message response{"PONG", "Bob", "Alice"};
-  std::this_thread::sleep_for(std::chrono::milliseconds(sleep_one));
+  std::this_thread::sleep_for(std::chrono::milliseconds(test_sleep));
   auto log = taste->get_log();
 
   EXPECT_EQ(response, (log->empty() ? *fail : log->back()));
