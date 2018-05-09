@@ -15,16 +15,16 @@ clsc:
 	clear;clear;
 
 test_unordered_sleep:
-	$(CC) $(CFLAGS) $(COPTS) -g -o test_unordered_sleep.out $(TEST_MAIN) $(TEST_DIR)/test_unordered_sleep.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
+	$(CC) $(CFLAGS) $(COPTS) -g -o unordered_sleep.out $(TEST_MAIN) $(TEST_DIR)/test_unordered_sleep.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
 
 test_unordered:
-	$(CC) $(CFLAGS) $(COPTS) -g -o test_unordered.out $(TEST_MAIN) $(TEST_DIR)/test_unordered.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
+	$(CC) $(CFLAGS) $(COPTS) -g -o unordered.out $(TEST_MAIN) $(TEST_DIR)/test_unordered.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
 
 test_expectmsg:
-	$(CC) $(CFLAGS) $(COPTS) -g -o test_expectmsg.out $(TEST_MAIN) $(TEST_DIR)/test_expectmsg.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
+	$(CC) $(CFLAGS) $(COPTS) -g -o expectmsg.out $(TEST_MAIN) $(TEST_DIR)/test_expectmsg.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
 
 test_expectmsg_sleep:
-	$(CC) $(CFLAGS) $(COPTS) -g -o test_expectmsg_sleep.out $(TEST_MAIN) $(TEST_DIR)/test_expectmsg_sleep.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
+	$(CC) $(CFLAGS) $(COPTS) -g -o expectmsg_sleep.out $(TEST_MAIN) $(TEST_DIR)/test_expectmsg_sleep.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
 
 clean:
 	rm -f *.out
