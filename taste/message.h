@@ -11,6 +11,7 @@ class Message {
   std::string to;
   bool operator==(Message const& rhs) const;
   std::string to_string() const;
+  friend std::ostream& operator<<(std::ostream& os, Message const& msg);
 };
 
 #endif

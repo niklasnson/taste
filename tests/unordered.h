@@ -4,13 +4,6 @@
 #include <chrono>
 
 /*!
- * Pretty print messages.
- */
-std::ostream& operator<<(std::ostream& os, Message const& m) {
-  return os << "<" << m.message << " " << m.from << " " << m.to << ">";
-}
-
-/*!
  * \brief A timer class where done() will return true if the timer has "gone
  * off".
  */
@@ -33,7 +26,7 @@ class Timer {
 /*!
  * Returns the next incoming message for a specific receiver.
  */
-Message& next_message(std::string recipient, std::vector<Message>* log) {
+Message next_message(std::string recipient, std::vector<Message>* log) {
   while (log->empty()) {
     continue;
   }
@@ -48,7 +41,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
  */
 #define ASSERT_MSG(expected)                                \
   do {                                                      \
-    std::vector<Message>* am_log = inbox->get_log();        \
+    std::vector<Message>* am_log = taste->get_log();        \
     ASSERT_EQ(expected, next_message(expected.to, am_log)); \
   } while (false)
 
@@ -57,7 +50,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
  */
 #define EXPECT_MSG(expected)                                \
   do {                                                      \
-    std::vector<Message>* am_log = inbox->get_log();        \
+    std::vector<Message>* am_log = taste->get_log();        \
     EXPECT_EQ(expected, next_message(expected.to, am_log)); \
   } while (false)
 
@@ -68,7 +61,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
  */
 #define ASSERT_MSG_TIMER(expected, timeout)                   \
   do {                                                        \
-    std::vector<Message>* am_log = inbox->get_log();          \
+    std::vector<Message>* am_log = taste->get_log();          \
     Timer timer{timeout};                                     \
     while (am_log->empty()) {                                 \
       continue;                                               \
@@ -92,7 +85,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
  */
 #define EXPECT_MSG_TIMER(expected, timeout)                   \
   do {                                                        \
-    std::vector<Message>* am_log = inbox->get_log();          \
+    std::vector<Message>* am_log = taste->get_log();          \
     Timer timer{timeout};                                     \
     while (am_log->empty()) {                                 \
       continue;                                               \
@@ -114,8 +107,8 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
  */
 #define ASSERT_UNORDERED(expects_list)                                 \
   do {                                                                 \
-    std::vector<Message>* au_log = inbox->get_log();                   \
-    std::mutex* au_log_lock = inbox->get_lock();                       \
+    std::vector<Message>* au_log = taste->get_log();                   \
+    /*std::mutex* au_log_lock = inbox->get_lock();*/                   \
     while (au_log->empty()) {                                          \
       continue;                                                        \
     }                                                                  \
@@ -123,7 +116,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
     while (!au_done) {                                                 \
       for (auto it{expects_list.begin()}; it != expects_list.end();) { \
         bool removed{false};                                           \
-        au_log_lock->lock();                                           \
+        /*au_log_lock->lock();*/                                       \
         for (auto& msg : *au_log) {                                    \
           if (msg == *it) {                                            \
             ASSERT_EQ(*it, msg);                                       \
@@ -132,7 +125,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
             break;                                                     \
           }                                                            \
         }                                                              \
-        au_log_lock->unlock();                                         \
+        /*au_log_lock->unlock();*/                                     \
         if (!removed) {                                                \
           ++it;                                                        \
         }                                                              \
@@ -146,8 +139,7 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
  */
 #define EXPECT_UNORDERED(expects_list)                                 \
   do {                                                                 \
-    std::vector<Message>* au_log = inbox->get_log();                   \
-    std::mutex* au_log_lock = inbox->get_lock();                       \
+    std::vector<Message>* au_log = taste->get_log();                   \
     while (au_log->empty()) {                                          \
       continue;                                                        \
     }                                                                  \
@@ -155,7 +147,6 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
     while (!au_done) {                                                 \
       for (auto it{expects_list.begin()}; it != expects_list.end();) { \
         bool removed{false};                                           \
-        au_log_lock->lock();                                           \
         for (auto& msg : *au_log) {                                    \
           if (msg == *it) {                                            \
             EXPECT_EQ(*it, msg);                                       \
@@ -164,7 +155,6 @@ Message& next_message(std::string recipient, std::vector<Message>* log) {
             break;                                                     \
           }                                                            \
         }                                                              \
-        au_log_lock->unlock();                                         \
         if (!removed) {                                                \
           ++it;                                                        \
         }                                                              \

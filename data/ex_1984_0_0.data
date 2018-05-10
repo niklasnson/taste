@@ -1,0 +1,16 @@
+[==========]
+[  Config  ]       seed: 1984
+[  Config  ] n_messages: 0
+[  Config  ]  test_sleep: 0
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from PackageTest
+[ RUN      ] PackageTest.SleepExpectMsg
+<PING Alice Bob>
+<PONG Bob Alice>
+[       OK ] PackageTest.SleepExpectMsg (308 ms)
+[----------] 1 test from PackageTest (308 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (308 ms total)
+[  PASSED  ] 1 test.

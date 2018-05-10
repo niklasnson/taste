@@ -1,0 +1,30 @@
+[==========]
+[  Config  ]       seed: 1984
+[  Config  ] n_messages: 10
+[  Config  ]  test_sleep: 2000
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from PackageTest
+[ RUN      ] PackageTest.SleepExpectUnordered
+<Merry Christmas. Bob Alice>
+<[ Message 2 ] :) :(>
+<[ Message 7 ] :) :(>
+<[ Message 9 ] :) :(>
+<[ Message 3 ] :) :(>
+<QUERTYIOP Alice Bob>
+tests/test_unordered_sleep.cpp:60: Failure
+Expected equality of these values:
+  messages->size()
+    Which is: 4
+  found
+    Which is: 2
+[  FAILED  ] PackageTest.SleepExpectUnordered (2000 ms)
+[----------] 1 test from PackageTest (2000 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (2000 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] PackageTest.SleepExpectUnordered
+
+ 1 FAILED TEST
