@@ -7,7 +7,7 @@
 #include <thread>
 #include <vector>
 
-#include "message.h"
+#include "message.hpp"
 
 class Taste {
  public:

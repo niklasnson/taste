@@ -1,5 +1,4 @@
 #include "taste.hpp"
-#include <iostream>
 #include <iterator>
 
 Taste::Taste(std::vector<Message> const& messages, unsigned const& seed,
@@ -16,7 +15,6 @@ void Taste::recv_random() {
   auto msg = messages.at(n);
   messages.erase(std::next(messages.begin(), n));
   inbox.push_back(msg);
-  std::cout << msg << std::endl;
 }
 
 std::vector<Message>* Taste::get_log() { return &inbox; }

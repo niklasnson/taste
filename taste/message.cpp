@@ -1,4 +1,4 @@
-#include "message.h"
+#include "message.hpp"
 #include <iostream>
 
 Message::Message(std::string message, std::string from, std::string to)
