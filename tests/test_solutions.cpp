@@ -5,7 +5,7 @@
 #include <thread>
 
 #include "../taste/client.h"
-#include "../taste/message.h"
+#include "../taste/message.hpp"
 #include "arguments.h"
 #include "stubs/inbox_stub.h"
 #include "unordered.h"

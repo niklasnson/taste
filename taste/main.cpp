@@ -1,6 +1,6 @@
 #include <iostream>
 #include "taste.hpp"
-#include "message.h"
+#include "message.hpp"
 
 int main(int argc, char* argv[]) {
   std::vector<Message> messages{

@@ -4,7 +4,7 @@
 #include <random>
 #include <thread>
 
-#include "../taste/message.h"
+#include "../taste/message.hpp"
 #include "../taste/taste.hpp"
 #include "arguments.h"
 #include "unordered.h"
