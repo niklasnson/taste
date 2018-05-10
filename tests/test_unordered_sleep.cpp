@@ -7,7 +7,7 @@
 #include "../taste/message.hpp"
 #include "../taste/taste.hpp"
 #include "arguments.h"
-#include "unordered.h"
+#include "unordered.hpp"
 
 struct PackageTest : testing::Test {
   Taste* taste;

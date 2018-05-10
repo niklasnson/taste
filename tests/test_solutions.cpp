@@ -8,7 +8,7 @@
 #include "../taste/message.hpp"
 #include "arguments.h"
 #include "stubs/inbox_stub.h"
-#include "unordered.h"
+#include "unordered.hpp"
 
 /*!
  * Helper function for sending one message
