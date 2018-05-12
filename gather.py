@@ -29,7 +29,7 @@ def get_unordered_sleep():
 def get_expectmsg():
     seeds = ["1337", "4711", "42", "3571290", "1984"]
     for seed in seeds:
-        test_config = ["./expectmsg.out", seed, "0", "0"]
+        test_config = ["./expect_msg.out", seed, "0", "0"]
         yield test_config
 
 
@@ -39,7 +39,7 @@ def get_expectmsg_sleep():
               "2500", "3000", "3500", "4000", "4500", "5000"]
     for seed in seeds:
         for sleep in sleeps:
-            test_config = ["./expectmsg_sleep.out", seed, "0", sleep]
+            test_config = ["./expect_msg_sleep.out", seed, "0", sleep]
             yield test_config
 
 

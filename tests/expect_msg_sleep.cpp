@@ -7,7 +7,6 @@
 #include "../taste/message.hpp"
 #include "../taste/taste.hpp"
 #include "arguments.h"
-#include "unordered.hpp"
 
 struct PackageTest : testing::Test {
   Taste* taste;
@@ -28,6 +27,7 @@ struct PackageTest : testing::Test {
 TEST_F(PackageTest, SleepExpectMsg) {
   std::thread t{&Taste::run, taste};
   t.detach();
+
   // Use sleep to expect correct message
   Message response{"PONG", "Bob", "Alice"};
   std::this_thread::sleep_for(std::chrono::milliseconds(test_sleep));

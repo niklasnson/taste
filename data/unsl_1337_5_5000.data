@@ -1,0 +1,14 @@
+[==========]
+[  Config  ]       seed: 1337
+[  Config  ] n_messages: 5
+[  Config  ]  test_sleep: 5000
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from PackageTest
+[ RUN      ] PackageTest.SleepExpectUnordered
+[       OK ] PackageTest.SleepExpectUnordered (5000 ms)
+[----------] 1 test from PackageTest (5001 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (5001 ms total)
+[  PASSED  ] 1 test.

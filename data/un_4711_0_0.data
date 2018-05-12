@@ -1,0 +1,8 @@
+[==========]
+[  Config  ]       seed: 4711
+[  Config  ] n_messages: 0
+[  Config  ]  test_sleep: 0
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from PackageTest
+[ RUN      ] PackageTest.ExpectUnordered
