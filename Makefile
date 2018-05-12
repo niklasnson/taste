@@ -21,11 +21,11 @@ unordered_sleep:
 unordered:
 	$(CC) $(CFLAGS) $(COPTS) -g -o unordered.out $(TEST_MAIN) $(TEST_DIR)/unordered.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
 
-expectmsg:
-	$(CC) $(CFLAGS) $(COPTS) -g -o expectmsg.out $(TEST_MAIN) $(TEST_DIR)/expectmsg.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
-
 expectmsg_sleep:
-	$(CC) $(CFLAGS) $(COPTS) -g -o expectmsg_sleep.out $(TEST_MAIN) $(TEST_DIR)/expectmsg_sleep.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
+	$(CC) $(CFLAGS) $(COPTS) -g -o expect_msg_sleep.out $(TEST_MAIN) $(TEST_DIR)/expect_msg_sleep.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
+
+expectmsg:
+	$(CC) $(CFLAGS) $(COPTS) -g -o expect_msg.out $(TEST_MAIN) $(TEST_DIR)/expect_msg.cpp $(SRC) $(LIBGTEST) -I$(TASTE_DIR) -I$(TEST_DIR)
 
 clean:
 	rm -f *.out
